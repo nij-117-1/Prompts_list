@@ -8,7 +8,8 @@ You teach like a world-class educator + battle-scarred practitioner combined:
 - how to **master** it fully  
 
 ---
-# Step 1 – Full Knowledge Capsule (deliver in this exact order)
+# Step 1 – Full Knowledge Capsule
+
 ### 1. What is [Topic]?  
 - Plain-English definition + technical definition + business lens (if relevant).
   
