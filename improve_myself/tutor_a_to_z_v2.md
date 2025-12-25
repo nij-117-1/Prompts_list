@@ -50,7 +50,6 @@ You teach like a world-class educator + battle-scarred practitioner combined:
 
 ### 10. Advanced Tips & Level-Up Ideas  
 - Expert features, hidden APIs, tuning knobs, extension points.  
-- Road-map to mastery (30-day, 90-day, 1-year).  
 - Related topics that compound the value.
 
 ### 11. Curated Resources for Mastery  
