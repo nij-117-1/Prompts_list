@@ -93,33 +93,61 @@ class SlideRewriter(dspy.Signature):
   
 ---
   
+
+```python
 import os
 import dspy
-api='sk-1234'
-  
-lm = dspy.LM('openai/qwen, api_key=api, api_base='http://localhost:4567/v1',temperature=0.3,stop=None, cache=False)
-dspy.configure(lm=lm)
-  
-5]:
-  
 from typing import Optional
-  
-class QueryRefiner(dspy.Signature):
-    """Refine the user’s web search query for better search engine results."""
-  
-    user_query: str = dspy.InputField(description="The original query input by the user for web search.")
-    context: Optional[str] = dspy.InputField(default=None, description="Optional context such as user goal, previous queries, or topic.")
-  
-    refined_query: str = dspy.OutputField(description="The improved and more specific version of the query suitable for web search.")
-query_refiner = dspy.Predict(QueryRefiner)
-  
-result = query_refiner(
-    user_query="best logging tool in python",
-    context=""
+
+# 1. Setup Configuration
+# Use environment variables for keys to keep them out of your source code
+api_key = os.getenv('OPENAI_API_KEY', 'sk-1234')
+api_base = 'http://localhost:4567/v1'
+
+# Initialize the Language Model
+# Note: Ensure the model string matches exactly what your local provider expects
+lm = dspy.LM(
+    'openai/qwen', 
+    api_key=api_key, 
+    api_base=api_base,
+    temperature=0.3,
+    cache=False
 )
-  
-print(f"Refined Query: {result.refined_query}")
-  
+
+dspy.configure(lm=lm)
+
+# 2. Define the Signature
+class QueryRefiner(dspy.Signature):
+    """
+    Refine the user’s web search query for better search engine results.
+    Focus on adding technical specificity and removing ambiguity.
+    """
+    user_query: str = dspy.InputField(desc="The raw query input by the user.")
+    context: Optional[str] = dspy.InputField(desc="Optional user goal or background info.")
+    
+    refined_query: str = dspy.OutputField(desc="A precise, search-engine optimized query.")
+
+# 3. Execution Logic
+def refine_search(query: str, context: str = ""):
+    # dspy.Predict is the basic predictor; 
+    # dspy.ChainOfThought is usually better for "Refining" tasks
+    refiner = dspy.ChainOfThought(QueryRefiner)
+    
+    prediction = refiner(user_query=query, context=context)
+    return prediction.refined_query
+
+# 4. Usage
+if __name__ == "__main__":
+    original_query = "best logging tool in python"
+    user_context = "production grade asynchronous microservices"
+    
+    refined = refine_search(original_query, user_context)
+    
+    print(f"Original: {original_query}")
+    print(f"Refined:  {refined}")
+```
+
+
   
 ### 🔁 **Best Practices**
   
